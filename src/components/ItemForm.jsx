@@ -1,37 +1,72 @@
-import { useState } from "react";
-import Item from "./components/Items";
-import Search from "./components/Search";
-import ItemForm from "./components/ItemForm";
+import React, { useState } from "react";
 
-function App() {
-  const [items, setItems] = useState([]);
-  const [search, setSearch] = useState("");
+const ItemForm = ({ onAdd }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    category: "",
+  });
 
-  const handleAdd = (newItem) => {
-    setItems([...items, newItem]);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleDelete = (id) => {
-    const toDelete = items.filter((item) => item.id !== id);
-    setItems(toDelete);
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) return;
 
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+    const newItem = {
+      id: Date.now(),
+      name: formData.name,
+      description: formData.description,
+      category: formData.category,
+    };
+
+    onAdd(newItem);
+    setFormData({ name: "", description: "", category: "" });
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
-        Item List
-      </h1>
-      <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <Search search={search} setSearch={setSearch} />
-        <ItemForm onAdd={handleAdd} />
-        <Item filteredItems={filteredItems} onDelete={handleDelete} />
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <label className="block">
+        Name:
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </label>
+      <label className="block">
+        Description:
+        <input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </label>
+      <label className="block">
+        Category:
+        <input
+          type="text"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </label>
+      <button
+        type="submit"
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Add Item
+      </button>
+    </form>
   );
-}
+};
 
-export default App;
+export default ItemForm;

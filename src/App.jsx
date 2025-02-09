@@ -2,7 +2,6 @@ import { useState } from "react";
 import Item from "./components/Items";
 import Search from "./components/Search";
 import ItemForm from "./components/ItemForm";
-import "./App.css";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -17,17 +16,20 @@ function App() {
     setItems(toDelete);
   };
 
-  // ✅ FIXED: Added missing parentheses for `toLowerCase()`
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div>
-      <h1>Item List</h1>
-      <Search search={search} setSearch={setSearch} />
-      <ItemForm onAdd={handleAdd} />
-      <Item filteredItems={filteredItems} onDelete={handleDelete} />
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
+        Item List
+      </h1>
+      <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <Search search={search} setSearch={setSearch} />
+        <ItemForm onAdd={handleAdd} />
+        <Item filteredItems={filteredItems} onDelete={handleDelete} />
+      </div>
     </div>
   );
 }
