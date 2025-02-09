@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 function Items({ filteredItems, onDelete }) {
   return (
@@ -14,9 +13,6 @@ function Items({ filteredItems, onDelete }) {
   );
 }
 
-Items.propTypes = {
-  filteredItems: PropTypes.array.isRequired,
-  onDelete: PropTypes.func.isRequired,
-};
+
 
 export default Items;

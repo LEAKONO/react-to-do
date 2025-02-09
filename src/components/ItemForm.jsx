@@ -1,54 +1,37 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from "react";
+import Item from "./components/Items";
+import Search from "./components/Search";
+import ItemForm from "./components/ItemForm";
 
-const ItemForm = ({ onAdd }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    category: "",
-  });
+function App() {
+  const [items, setItems] = useState([]);
+  const [search, setSearch] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleAdd = (newItem) => {
+    setItems([...items, newItem]);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name.trim()) return;
-
-    const newItem = {
-      id: Date.now(), 
-      name: formData.name,
-      description: formData.description,
-      category: formData.category,
-    };
-
-    onAdd(newItem);
-    setFormData({ name: "", description: "", category: "" });
+  const handleDelete = (id) => {
+    const toDelete = items.filter((item) => item.id !== id);
+    setItems(toDelete);
   };
+
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-      </label>
-      <label>
-        Description:
-        <input type="text" name="description" value={formData.description} onChange={handleChange} />
-      </label>
-      <label>
-        Category:
-        <input type="text" name="category" value={formData.category} onChange={handleChange} />
-      </label>
-      <button type="submit">Add Item</button>
-    </form>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
+        Item List
+      </h1>
+      <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <Search search={search} setSearch={setSearch} />
+        <ItemForm onAdd={handleAdd} />
+        <Item filteredItems={filteredItems} onDelete={handleDelete} />
+      </div>
+    </div>
   );
-};
+}
 
-// ✅ Added PropTypes validation
-ItemForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
-};
-
-export default ItemForm;
+export default App;
